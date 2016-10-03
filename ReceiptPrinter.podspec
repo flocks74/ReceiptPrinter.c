@@ -2,21 +2,21 @@
 
 Pod::Spec.new do |s|
   s.name             = "ReceiptPrinter"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "ReceiptPrinter"
   s.description      = <<-DESC
+    Receipt printer. C code that converts one byte stream into other depending on printer driver.
                        DESC
-  s.homepage         = "https://github.com/xslim/ReceiptPrinter"
+  s.homepage         = "https://github.com/xslim/ReceiptPrinter.c"
   s.license          = 'MIT'
   s.author           = { "Taras Kalapun" => "t.kalapun@gmail.com" }
-  #s.source           = { :git => "https://github.com/xslim/zint.c.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/xslim/ReceiptPrinter.c.git" }
 
 
   s.platform     = :ios, '6.0'
   s.requires_arc = true
 
   s.source_files = 'ReceiptPrinter/*.{h,m}', 'printer/*.{h,c}', 'bytebuf/*.{h,c}'
-  s.header_mappings_dir = '*'
 
   # s.public_header_files = 'ReceiptPrinter/*.h'
   s.frameworks = 'ExternalAccessory'
