@@ -28,6 +28,7 @@ static unsigned char INIT[] = { 0x1b, 0x40 };
 static unsigned char SWITCH_COMMAND[] = { 0x1b, 0x69, 0x61, 0x00 };
 static unsigned char STANDARD_MODE[] = { 0x1b, 0x53 };
 static unsigned char FLUSH_COMMAND[] = {0xFF, 0x0C};
+static unsigned char PAGE_MODE[] = { 0x1b, 0x4c };
 
 static int
 drv_init(printer_driver_data *data) {
@@ -126,6 +127,27 @@ drv_render_image(bytebuf *ob, const unsigned char* bytes, uint16_t size, float w
     unsigned char linespacing24[] = { 0x1b, 0x33, 0x18 };
     bytebuf_append_bytes(ob, linespacing24, sizeof(linespacing24));
     
+    //  Enter Page mode
+    bytebuf_append_bytes(ob, PAGE_MODE, sizeof(PAGE_MODE));
+    
+    unsigned int h = i_height;
+    unsigned int h2 = h * 2 + 48;
+    
+    /* Set the printing area, h * 2 because of double density */
+    unsigned char seq[10];
+    seq[0] = 0x1b;
+    seq[1] = 'W';
+    seq[2] = 0;     /* xl */
+    seq[3] = 0;     /* xh */
+    seq[4] = 0;     /* yl */
+    seq[5] = 0;     /* yh */
+    seq[6] = 0;     /* dxl */
+    seq[7] = 2;     /* dxh */   //  512px
+    seq[8] = h2 % 256;      /* dyl */
+    seq[9] = h2 / 256;      /* dyh */
+    
+    bytebuf_append_bytes(ob, seq, sizeof(seq));
+
     for (int l=0; l < i_height; l += 24) {
         
         // Center logo (using alignment commands works on some, but not all printers)
@@ -154,9 +176,14 @@ drv_render_image(bytebuf *ob, const unsigned char* bytes, uint16_t size, float w
                 
             }
         }
-        bytebuf_append_bytes(ob, LF, 1);
+        
+        unsigned char lineFeed[] = { 0x1b, 0x4a, 0x30 };
+        bytebuf_append_bytes(ob, lineFeed, sizeof(lineFeed));
     }
     
+    bytebuf_append_bytes(ob, FLUSH_COMMAND, 2);
+    bytebuf_append_bytes(ob, STANDARD_MODE, 2);
+
     // Back to default linespacing
     unsigned char defaultLinespacing[] = { 0x1b, 0x32 };
     bytebuf_append_bytes(ob, defaultLinespacing, sizeof(defaultLinespacing));
