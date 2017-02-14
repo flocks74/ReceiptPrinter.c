@@ -130,8 +130,14 @@ drv_render_image(bytebuf *ob, const unsigned char* bytes, uint16_t size, float w
     //  Enter Page mode
     bytebuf_append_bytes(ob, PAGE_MODE, sizeof(PAGE_MODE));
     
+    //  Retrieve supported density mode
+    unsigned int density = data->density;
+    if (density != 1 && density != 2) {
+        density = 1;
+    }
+    
     unsigned int h = i_height;
-    unsigned int h2 = h * 2 + 48;
+    unsigned int h2 = h * density;
     
     /* Set the printing area, h * 2 because of double density */
     unsigned char seq[10];
@@ -177,7 +183,8 @@ drv_render_image(bytebuf *ob, const unsigned char* bytes, uint16_t size, float w
             }
         }
         
-        unsigned char lineFeed[] = { 0x1b, 0x4a, 0x30 };
+        short height = 24 * density;
+        unsigned char lineFeed[] = { 0x1b, 0x4a, height };
         bytebuf_append_bytes(ob, lineFeed, sizeof(lineFeed));
     }
     

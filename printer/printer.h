@@ -47,6 +47,7 @@ struct printer_driver_data {
     uint16_t characters_per_line;
 //    int input_buffer_size;
     int current_line_y;
+    uint8_t density; // Expected values are 1 or 2. Other values will be ignored and replaced with 1.
 };
 typedef struct printer_driver_data printer_driver_data;
 
