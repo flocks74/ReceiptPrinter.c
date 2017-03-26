@@ -16,7 +16,7 @@
 #define _printer_log(fmt, ...)
 #define _printer_driver ""
 
-t#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
