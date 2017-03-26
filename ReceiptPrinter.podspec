@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "ReceiptPrinter"
-  s.version          = "0.1.2"
+  s.version          = "0.1.3"
   s.summary          = "ReceiptPrinter"
   s.description      = <<-DESC
     Receipt printer. C code that converts one byte stream into other depending on printer driver.
