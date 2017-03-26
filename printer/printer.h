@@ -16,22 +16,30 @@
 #define _printer_log(fmt, ...)
 #define _printer_driver ""
 
-typedef enum {
-    PrinterTypeAutoDetect,
+t#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef NS_ENUM
+#define NS_ENUM(_type, _name) _type _name; enum
+#endif
+
+typedef NS_ENUM(int, PrinterType) {
+    PrinterTypeAutoDetect = 0,
     PrinterTypeESCPOS,
     PrinterTypeZebra,
     PrinterTypeBlueBamboo,
     PrinterTypeText,
-} PrinterType;
+};
 
-typedef enum {
+typedef NS_ENUM(int, PrinterState) {
     PrinterStatePreparing = 0,
     PrinterStateReadyForPrinting,
     PrinterStatePrinting,
     PrinterStateFinished // final state
-} PrinterState;
+};
 
-typedef enum {
+typedef NS_ENUM(uint8_t, PrinterLineMarkup) {
     PrinterLineMarkupNone = 0,
     
     PrinterLineMarkupAlignmentLeft = 0x01,
@@ -39,8 +47,7 @@ typedef enum {
     PrinterLineMarkupAlignmentCenter = 0x03,
     
     PrinterLineMarkupBold = 0x04
-} PrinterLineMarkup;
-
+};
 
 struct printer_driver_data {
     uint16_t dots_per_line;
@@ -143,5 +150,9 @@ int printer_content_end(printer_t *printer);
 int printer_add_line_key_value(printer_t *printer, char *key, char *value, PrinterLineMarkup markup);
 int printer_add_line(printer_t *printer, char *line, PrinterLineMarkup markup);
 int printer_add_image_data(printer_t *printer, const unsigned char* bytes, uint16_t size, float width, float height);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
